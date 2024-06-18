@@ -1,4 +1,36 @@
 package com.example.discountapp.viewModels
 
-class CalcularViewModel1 {
+import androidx.lifecycle.ViewModel
+
+class CalcularViewModel1: ViewModel() {
+
+    //pair te permite devolver varios resultados en una funcion
+    fun calcular(precio: String, descuento: String): Pair<Double, Pair<Double, Boolean>> {
+        var precioDescuento = 0.0
+        var totalDescuento = 0.0
+        var showAlert = false
+        if(precio != "" && descuento != ""){
+            precioDescuento = calcularPrecio(
+                precio.toDouble(),
+                descuento.toDouble()
+            )
+            totalDescuento = calcularDescuento(
+                precio.toDouble(),
+                descuento.toDouble()
+            )
+        } else {
+            showAlert = true
+        }
+        return Pair(precioDescuento, Pair(totalDescuento, showAlert))
+    }
+
+    private fun calcularPrecio(precio: Double, descuento: Double): Double {
+        val res = precio - calcularDescuento(precio, descuento)
+        return kotlin.math.round(res*100) / 100
+    }
+
+    private fun calcularDescuento(precio: Double, descuento: Double): Double {
+        val res = precio * (1-descuento/100)
+        return kotlin.math.round(res*100) / 100
+    }
 }
